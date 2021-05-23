@@ -15,35 +15,36 @@ inline enum lm4f_clken gpio_rcc_from(uint32_t port) {
 }
 
 /**
- * - see LM4F data sheet (13.1 to 13.44).
+ * - see LM4F data sheet .
  */
-void adc_init(uint32_t port, uint8_t pin) {
-    /// ### part 1. the module initialization.
+void adc0_init(uint32_t port, uint8_t pin) {
+    /// ### part 1. the module initialization. (according to 13.4.1)
     /// 1. Enable the ADC clock by RCGCADC
     periph_clock_enable(RCC_ADC0);
     /// 2. Enable the GPIO clock for analog input by RCGGPIO
     enum lm4f_clken rcc = gpio_rcc_from(port);
     periph_clock_enable(rcc);
     /// 3. Set the GPIO `AFSEL` bits
-    gpio_mode_setup(port, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, pin);
-        // TODO(shimoda): check to need to more or some...?
+    GPIO_AFSEL(port) |= pin;  // do not use gpio_set_af by side effects.
     /// 4. Clear the `DEN` bit in `GPIOEN` register to be analog inputs.
     /// 5. Set `1` to the `GPIOAMSEL` to disbale the analog isolate circuit.
+    gpio_mode_setup(port, GPIO_MODE_ANALOG, GPIO_PUPD_NONE, pin);
+        // TODO(shimoda): check to need to more or some...?
     /// 6. (optional) set sample sequencer priorities.
     // for now, not set => priority is 0 to 3.
 
-    /// ### part 2. the sequencer initialization.
+    /// ### part 2. the sequencer initialization. (according to 13.4.2)
     /// 1. Disable the sequencer by a register.
-    ADCACTSS &= 1;
+    ADCACTSS(port) |= 1;
     /// 2. set the trigger events by a register.
-    ADCEMUX |= 1;
+    ADCEMUX(port) |= 1;
     /// 3. select input sources in samples.
-    ADCSSMUX0 |= 1;
+    ADCSSMUX0(port) |= 1;
     /// 4. set the `END` bit to control bits.
-    ADCSSCTL0 |= 1;
+    ADCSSCTL0(port) |= 1;
     /// 5. setup interrupts.
     // for now, not set => no interrupts.
     /// 6. finally enable the sequencer logic by a register.
-    ADCACTSS |= 1;
+    ADCACTSS(port) |= 1;
 }
 

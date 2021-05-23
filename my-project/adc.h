@@ -36,8 +36,8 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LM4F_GPIO_H
-#define LM4F_GPIO_H
+#ifndef LM4F_ADC_H
+#define LM4F_ADC_H
 
 /**@{*/
 
@@ -49,6 +49,22 @@
 #define ADC1_BASE			(0x40039000U)
 
 /* =============================================================================
+ * ADC registers
+ * ---------------------------------------------------------------------------*/
+
+/* ADC Active Sample Sequencer */
+#define ADCACTSS(port)			MMIO32((port) + 0x000)
+
+/* ADC Active Sample Sequencer */
+#define ADCEMUX(port)			MMIO32((port) + 0x014)
+
+/* ADC Active Sample Sequencer */
+#define ADCSSMUX0(port)			MMIO32((port) + 0x040)
+
+/* ADC Active Sample Sequencer */
+#define ADCSSCTL0(port)			MMIO32((port) + 0x044)
+
+/* =============================================================================
  * Convenience macros
  * ---------------------------------------------------------------------------*/
 /** @defgroup adc_reg_base GPIO register base addresses
@@ -56,6 +72,7 @@
 #define ADC0				ADC0_BASE
 #define ADC1				ADC1_BASE
 /** @} */
+
 
 /* =============================================================================
  * Function prototypes
