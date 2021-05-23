@@ -64,6 +64,12 @@
 /* ADC Active Sample Sequencer */
 #define ADCSSCTL0(port)			MMIO32((port) + 0x044)
 
+/* ADC  */
+#define ADCSSFIFO0(port)		MMIO32((port) + 0x048)
+
+/* ADC  */
+#define ADCPSSI(port)			MMIO32((port) + 0x028)
+
 /* =============================================================================
  * Convenience macros
  * ---------------------------------------------------------------------------*/
@@ -79,7 +85,8 @@
  * ---------------------------------------------------------------------------*/
 BEGIN_DECLS
 
-void adc_init(uint32_t port, uint8_t pin);
+void adc0_init(uint32_t port, uint8_t pins);
+uint32_t adc0_get(uint32_t mux);
 
 END_DECLS
 
